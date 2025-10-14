@@ -1,39 +1,39 @@
 const names = [
-  'Sanelisiwe Sfumba',
-  'Indiphile Phiri',
-  'Bandile Dlamini',
-  'Antonio Nah',
-  'Aphiwe Shelambe',
-  'Beleive Mncube',
-  'Benjamin michee',
-  'Benji Mangwani',
-  'Blessing Masaire',
-  'Blessing Kanjinga',
-  'Boitumelo Tsamai',
-  'Bokang Molapisi',
-  'Bonga Zungu',
-  'Bonginkosi Mhlanga',
-  'Calib Derbyshire',
-  'Daniel Danza',
-  'Darlin NdiriCinpa',
-  'David Mbumba',
-  'David Bonyoma',
-  'Elijah Kilolomulumba',
-  'Ellenique Hodgeson',
-  'Emmanuel Bakula',
-  'Francine Dimuangi',
-  'Gift Kalombo',
-  'Gift Andile Ajibade',
-  'Gontse Ngembezi',
-  'Helder Mathe',
-  'Honore Yombo',
-  'Iminathi Saul',
-  'James Sibanda',
-  'Jeremiah Kalembo',
-  'Joel Mabeki',
-  'John Mukongo',
-  'Jonathan Shango',
-  'Jordan Ngambu'
+    'Sanelisiwe Sfumba',
+    'Indiphile Phiri',
+    'Bandile Dlamini',
+    'Antonio Nah',
+    'Aphiwe Shelambe',
+    'Beleive Mncube',
+    'Benjamin michee',
+    'Benji Mangwani',
+    'Blessing Masaire',
+    'Blessing Kanjinga',
+    'Boitumelo Tsamai',
+    'Bokang Molapisi',
+    'Bonga Zungu',
+    'Bonginkosi Mhlanga',
+    'Calib Derbyshire',
+    'Daniel Danza',
+    'Darlin NdiriCinpa',
+    'David Mbumba',
+    'David Bonyoma',
+    'Elijah Kilolomulumba',
+    'Ellenique Hodgeson',
+    'Emmanuel Bakula',
+    'Francine Dimuangi',
+    'Gift Kalombo',
+    'Gift Andile Ajibade',
+    'Gontse Ngembezi',
+    'Helder Mathe',
+    'Honore Yombo',
+    'Iminathi Saul',
+    'James Sibanda',
+    'Jeremiah Kalembo',
+    'Joel Mabeki',
+    'John Mukongo',
+    'Jonathan Shango',
+    'Jordan Ngambu'
 ];
 
 describe('Ignore App Errors', () => {
@@ -81,20 +81,30 @@ describe('Ignore App Errors', () => {
             cy.get('button').contains('Log Pastoral Call Task').should('exist');
         });
 
-        names.forEach(name => {
-            cy.get('button').contains('Log Pastoral Call Task').click();
-            cy.get('div').contains('Awaiting Call').click();
-            cy.get('[data-value="proper-connect-Cell-request"]').click();
-            cy.get(':nth-child(3) > .MuiFormControl-root > .MuiInputBase-root').type(name);
-            cy.get('div').contains('Blessed Manana').should('be.visible', {force: true});
-            cy.get('[aria-labelledby="task-stage-label"]').contains('Open').click();
+        function capture(numOfPeople) {
+            const performCapture = (name) => {
+                cy.get('button').contains('Log Pastoral Call Task').click();
+                cy.get('div').contains('Awaiting Call').click();
+                cy.get('[data-value="proper-connect-Cell-request"]').click();
+                cy.get(':nth-child(3) > .MuiFormControl-root > .MuiInputBase-root').type(name);
 
-            cy.get('li').contains('Closed').click({ force: true });
-            cy.get('button').contains('Finish').click();
-            cy.wait('@postTask').then(() => {
+                cy.get('div').contains('Blessed Manana').should('be.visible', { force: true });
+                cy.get('[aria-labelledby="task-stage-label"]').contains('Open').click();
+                cy.get('li').contains('Closed').click({ force: true });
+                cy.get('button').contains('Finish').click();
+
+                cy.wait('@postTask');
                 cy.wait(2000);
-            });
-        })
+            };
+
+            // --- Handle 'all' or number input ---
+            const selectedNames = numOfPeople === 'all' ? names : names.slice(0, numOfPeople);
+
+            selectedNames.forEach(performCapture);
+        }
+
+
+        capture(15)
 
     });
 });
