@@ -77,9 +77,10 @@ describe('Ignore App Errors', () => {
             cy.contains('div', 'My Tasks').click();
         });
 
-        cy.wait('@getAllTasks').then(() => {
-            cy.get('button').contains('Log Pastoral Call Task').should('exist');
-        });
+        cy.wait(10000)        
+        cy.get('button').contains('Log Pastoral Call Task').should('exist');
+        // cy.wait('@getAllTasks').then(() => {
+        // });
 
         function capture(numOfPeople) {
             const performCapture = (name) => {
@@ -104,7 +105,7 @@ describe('Ignore App Errors', () => {
         }
 
 
-        capture(15)
+        capture(30)
 
     });
 });
